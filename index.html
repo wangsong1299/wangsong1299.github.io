@@ -1,215 +1,55 @@
-{% extends "admin/base_site.html" %}
-{% load i18n admin_static %}
+{% load admin_static %}{% load firstof from future %}<!DOCTYPE html>
+<html>
+	<head>
+		<title>三农</title>
+		<meta name="viewport" content="width=device-width,target-densitydpi=high-dpi,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.3, user-scalable=yes"/>
+		<style>
+		.content{margin:2%;width: 96%}
+		img {width:100%;height: auto;}
 
-{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/dashboard.css" %}" />{% endblock %}
+		</style>
+		</head>
+	<body>
+	<div class="content">
+		<img src="{% static 'admin/img/1.jpg' %}" alt="1" />
+		<img src="{% static 'admin/img/2.jpg' %}" alt="" />
+		<img src="{% static 'admin/img/3.jpg' %}" alt="" />
+		<img src="{% static 'admin/img/4.jpg' %}" alt="" />
+		<img src="{% static 'admin/img/6.jpg' %}" alt="" />		
+	</div>
 
-{% block coltype %}colMS{% endblock %}
-
-{% block bodyclass %}{{ block.super }} dashboard{% endblock %}
-
-{% block breadcrumbs %}{% endblock %}
-
-{% block content %}
-<div id="content-menu">
-    <div class="content-menu-block" id="auth">管理员</div>
-    <div class="content-menu-block" id="discovers">内容管理</div>
-    <div class="content-menu-block" id="feedback">反馈</div>
-    <div class="content-menu-block" id="stocks">股票</div>
-    <div class="content-menu-block" id="trades">交易记录</div>
-    <div class="content-menu-block" id="uasset">用户资产</div>
-    <div class="content-menu-block" id="users">用户</div>
-    <div class="content-menu-block" id="voucher">优惠券</div>
-    <a href="/admin/search/"> <div class="content-menu-block">交易操作</div></a>
-    <a href="/admin/tradeSummary/"> <div class="content-menu-block">交易信息汇总</div></a>
-    <a href="/admin/stockOperation/"> <div class="content-menu-block">股票批量停牌</div></a>
-    <a href="/market_interfaces/"> <div class="content-menu-block">个股外链</div></a>
-    <a href="/friend_reward/"> <div class="content-menu-block">邀请好友奖励页</div></a>
-    <a href="/voucherSetting/"> <div class="content-menu-block">代金券额度和短信推送</div></a>
-
-</div>
-
-
-<div id="content-main">
-{% if app_list %}
-    {% for app in app_list %}
-        <div class="app-{{ app.app_label }} module">
-        <table>
-
-        <caption>
-            <div class="section" title="{% blocktrans with name=app.name %}Models in the {{ name }} application{% endblocktrans %}" >{{ app.name }}</div>
-        </caption>
-        {% for model in app.models %}
-            <tr class="model-{{ model.object_name|lower }}">
-            {% if model.admin_url %}
-                <th scope="row"><a href="{{ model.admin_url }}">{{ model.name }}</a></th>
-            {% else %}
-                <th scope="row">{{ model.name }}</th>
-            {% endif %}
-
-            {% if model.add_url %}
-                <td><a href="{{ model.add_url }}" class="addlink">{% trans 'Add' %}</a></td>
-            {% else %}
-                <td>&nbsp;</td>
-            {% endif %}
-
-            {% if model.admin_url %}
-                <td><a href="{{ model.admin_url }}" class="changelink">{% trans 'Change' %}</a></td>
-            {% else %}
-                <td>&nbsp;</td>
-            {% endif %}
-            </tr>
-        {% endfor %}
-        </table>
-        </div>
-    {% endfor %}
-{% else %}
-    <p>{% trans "You don't have permission to edit anything." %}</p>
-{% endif %}
-</div>
-
-<script type="text/javascript" src="../../static/admin/js/jquery.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function(){
-
-            $(".module").hide();
-            $(".app-auth").show();
-             $(".app-auth .section").html("身份认证和授权");
-            $("#auth").addClass("content-menu-block-focus");
-
-            $("#auth").click(function(){
-                $(".app-auth .section").html("身份认证和授权");
-                if(!$(".app-auth").is(":visible")){
-                     $(".module").hide();
-                     $(".app-auth").show();
-                     $(".content-menu-block").removeClass("content-menu-block-focus");
-                     $("#auth").addClass("content-menu-block-focus");
-                     
-                }
-            })
-
-            $("#discovers").click(function(){
-                $(".app-discovers .section").html("内容管理");
-                $(".app-discovers .model-imagetext a").html("图文");
-				$(".app-discovers .model-systeminfo a").html("系统信息");
-                $(".app-discovers .model-text a").html("文本");
-                if(!$(".app-discovers").is(":visible")){
-                     $(".module").hide();
-                     $(".app-discovers").show();
-                     $(".content-menu-block").removeClass("content-menu-block-focus");
-                     $("#discovers").addClass("content-menu-block-focus");
-                     
-                }
-            })
-            $("#feedback").click(function(){
-                $(".app-feedback .section").html("反馈");
-                $(".app-feedback .model-feedback a").html("反馈");
-                if(!$(".app-feedback").is(":visible")){
-                     $(".module").hide();
-                     $(".app-feedback").show();
-                     $(".content-menu-block").removeClass("content-menu-block-focus");
-                     $("#feedback").addClass("content-menu-block-focus");
-                }
-            })
-            $("#stocks").click(function(){               
-                $(".app-stocks .section").html("股票");
-                $(".app-stocks .model-stock a").html("股票");
-                if(!$(".app-stocks").is(":visible")){
-                     $(".module").hide();
-                     $(".app-stocks").show();
-                     $(".content-menu-block").removeClass("content-menu-block-focus");
-                     $("#stocks").addClass("content-menu-block-focus");
-                }
-            })
-
-            $("#trades").click(function(){
-                $(".app-trades .section").html("交易");
-                $(".app-trades .model-tradebuyrecord a").html("买入记录");
-                $(".app-trades .model-tradeexception a").html("异常交易状态");
-                $(".app-trades .model-traderestore a").html("交易恢复记录");
-                $(".app-trades .model-tradesellrecord a").html("卖出记录");
-
-                if(!$(".app-trades").is(":visible")){
-                     $(".module").hide();
-                     $(".app-trades").show();
-                     $(".content-menu-block").removeClass("content-menu-block-focus");
-                     $("#trades").addClass("content-menu-block-focus");
-                     
-                }
-            })
-
-            $("#uasset").click(function(){
-                $(".app-uasset .section").html("用户资产");
-                $(".app-uasset .model-userassetslog a").html("用户资产日志");
-                $(".app-uasset .model-userassets a").html("用户资产");
-                $(".app-uasset .model-usercash a").html("用户现金");
-                $(".app-uasset .model-userrecharge a").html("用户充值");
-                $(".app-uasset .model-usersubstocks a").html("用户自选股");
-                $(".app-uasset .model-uservouchers a").html("用户优惠券");
-
-                if(!$(".app-uasset").is(":visible")){
-                     $(".module").hide();
-                     $(".app-uasset").show();
-                     $(".content-menu-block").removeClass("content-menu-block-focus");
-                     $("#uasset").addClass("content-menu-block-focus");
-                }
-            })
-            $("#users").click(function(){
-                $(".app-users .section").html("用户");
-                $(".app-users .model-alipaychangeapply a").html("支付宝账号修改申请");
-                $(".app-users .model-user a").html("用户");
-                if(!$(".app-users").is(":visible")){
-                     $(".module").hide();
-                     $(".app-users").show();
-                     $(".content-menu-block").removeClass("content-menu-block-focus");
-                     $("#users").addClass("content-menu-block-focus");
-                }
-            })
-            $("#voucher").click(function(){
-                $(".app-voucher .section").html("优惠券");
-                $(".app-voucher .model-voucher a").html("优惠券");
-                if(!$(".app-voucher").is(":visible")){
-                     $(".module").hide();
-                     $(".app-voucher").show();
-                     $(".content-menu-block").removeClass("content-menu-block-focus");
-                     $("#voucher").addClass("content-menu-block-focus");
-                }
-            })
-
-        })
-    </script>
-
-{% endblock %}
-
-
-
-{% block sidebar %}
-<div id="content-related">
-    <div class="module" id="recent-actions-module">
-        <h2>{% trans 'Recent Actions' %}</h2>
-        <h3>{% trans 'My Actions' %}</h3>
-            {% load log %}
-            {% get_admin_log 10 as admin_log for_user user %}
-            {% if not admin_log %}
-            <p>{% trans 'None available' %}</p>
-            {% else %}
-            <ul class="actionlist">
-            {% for entry in admin_log %}
-            <li class="{% if entry.is_addition %}addlink{% endif %}{% if entry.is_change %}changelink{% endif %}{% if entry.is_deletion %}deletelink{% endif %}">
-                {% if entry.is_deletion or not entry.get_admin_url %}
-                    {{ entry.object_repr }}
-                {% else %}
-                    <a href="{{ entry.get_admin_url }}">{{ entry.object_repr }}</a>
-                {% endif %}
-                <br/>
-                {% if entry.content_type %}
-                    <span class="mini quiet">{% filter capfirst %}{% trans entry.content_type.name %}{% endfilter %}</span>
-                {% else %}
-                    <span class="mini quiet">{% trans 'Unknown content' %}</span>
-                {% endif %}
-            </li>
-            {% endfor %}
-            </ul>
-            {% endif %}
+	<div>你在哪？？
+    <span class="info">
+	  <div class="" id="latitude"></div>
+	  <div class="" id="longitude"></div>
+	</span>
     </div>
-</div>
-{% endblock %}
+        <script type="text/javascript">
+            if (navigator.geolocation) {
+			
+				 navigator.geolocation.getCurrentPosition(updateLocation,handleeLocationError);
+
+				function updateLocation(position) {
+					var latitude = position.coords.latitude;
+					var longitude = position.coords.longitude;
+
+					document.getElementById("latitude").innerHTML = Math.round(latitude)+"N";
+					document.getElementById("longitude").innerHTML = Math.round(longitude)+"E";
+				}
+
+				function handleeLocationError(error)
+					{
+						switch (error.code) {
+							case 0: alert(error.message); break;
+							case 1: alert(error.message); break;
+							case 2: alert(error.message); break;
+							case 3: alert(error.message); break;
+						}
+					}
+   
+            }
+
+           
+        </script>
+	</body>
+</html>
