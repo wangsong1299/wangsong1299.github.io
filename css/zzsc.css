@@ -47,6 +47,10 @@ section {
 	cursor: pointer;
 	transition: 0.25s ease;	
 }
+.tile_last{
+	background: #df7f4f;
+	background: -webkit-gradient(linear, 0 0, 100% 100%, from(#000), to(#fff));
+	background: -moz-linear-gradient(-45deg, #000, #fff);}
 .download-btn {
 	background: white;
 	color: #3F51B5;
